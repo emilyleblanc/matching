@@ -11,8 +11,6 @@ function App() {
 
   const [ films, setFilms ] = useState([]);
 
-  const filmCopy = [...films]
-
   //get api data
   useEffect(() => {
     axios({
@@ -20,11 +18,21 @@ function App() {
       method:"GET",
       dataResponse:"json",
     }).then(res => {
-      setFilms(res.data);
-      console.log(res.data)
+      //create an array of films
+      const cardsAndMatch = res.data
+
+      //cycle through data and push to cardsAndMatch array to make a duplicate of each film
+      res.data.map(data => cardsAndMatch.push(data))
+
+      //shuffle array in random order
+      const shuffledCard = (arr) => arr.sort(() => 0.5 - Math.random());
+      shuffledCard(cardsAndMatch)
+
+      setFilms(cardsAndMatch)
     }
     ).catch(error => console.log(error))
   },[])
+
 
   const _cards = films.map((film) => (
   <Card
@@ -34,21 +42,11 @@ function App() {
     />)
   )
 
-  const _matchingCards = filmCopy.map((film) => (
-    <Card
-    key={film.id}
-    moviePoster={film.image}
-    title={film.title}
-    />
-  ))
-
-
   return (
     <div className="App">
       Matching Game
       <Board>
         {_cards}
-        {_matchingCards}
       </Board>
     </div>
   );
