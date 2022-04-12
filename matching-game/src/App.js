@@ -5,10 +5,12 @@ import axios from 'axios';
 //components
 import Board from './Board';
 import Card from './Card';
+import Score from './Score';
 
 function App() {
 
   const [ films, setFilms ] = useState([]);
+  const [ count, setCount ] = useState(0);
 
   //get api data
   useEffect(() => {
@@ -33,26 +35,27 @@ function App() {
     ).catch(error => console.log(error))
   },[])
 
+  //logic to get selected cards and find matches
   let arrOfSelectedCards = []
 
   const handleIsSelected = (card) => {
+
     arrOfSelectedCards.push(card)
+    console.log(count)
+    
     //if 2 cards are selected compare ids to find a match
     if(arrOfSelectedCards.length === 2 && arrOfSelectedCards[0] !== arrOfSelectedCards[1]){
-      console.log('2 ids not a match')
+      //reset arr to 0
       arrOfSelectedCards = []
+      
     }else if(arrOfSelectedCards.length === 2 && arrOfSelectedCards[0] === arrOfSelectedCards[1]){
-      console.log('2 ids a match')
+      //if a match increase count (score)
+      setCount(count + 1)
+      //reset arr to zero
       arrOfSelectedCards = []
-    }else(
-      console.log(' 1 id')
-    )
+
+    }return
   }
-
-
-  //if a match increase count (score)
-
-  //not a match set the cards to selected false
 
   //create card components
   const _cards = films.map((film) => (
@@ -68,6 +71,8 @@ function App() {
   return (
     <div className="App">
       <h1>Matching Game</h1>
+      <Score
+        count={count}/>
       <Board>
         {_cards}
       </Board>
