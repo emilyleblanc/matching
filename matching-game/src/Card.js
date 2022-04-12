@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-const Card = ({ key, moviePoster, title }) => {
-
-   const [ isSelected, setIsSelected ] = useState(false)
+const Card = ({ id, moviePoster, title, handleIsSelected }) => {
 
    const styles = {
       button:{
@@ -16,10 +14,10 @@ const Card = ({ key, moviePoster, title }) => {
    }
 
    return(
-      <button id={key} style={styles.button} onClick={() => { setIsSelected(!isSelected)} }>
+      <button key={id} style={styles.button} onClick={() => handleIsSelected(id)}>
          <img style={styles.img} src={moviePoster} alt={title}/>
       </button>
    )
 }
 
-export default Card;
+export default Card
