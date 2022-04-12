@@ -15,14 +15,13 @@ function App() {
   //get api data
   useEffect(() => {
     axios({
-      url:"https://ghibliapi.herokuapp.com/films",
+      url:"https://ghibliapi.herokuapp.com/films?limit=10",
       method:"GET",
       dataResponse:"json",
     }).then(res => {
 
       //create an array of films
       const cardsAndMatch = res.data
-
       //make a duplicate of each film
       res.data.map(data => cardsAndMatch.push(data))
 
@@ -63,14 +62,16 @@ function App() {
     key={film.id}
     id={film.id}
     moviePoster={film.image}
+    movieBanner={films[0].movie_banner}
     title={film.title}
     handleIsSelected={handleIsSelected}
     />)
   )
 
   return (
-    <div className="App">
+    <div className="App" style={{display:"flex", alignItems:"center", flexDirection:'column', boxSizing:'border-box'}}>
       <h1>Matching Game</h1>
+
       <Score
         count={count}/>
       <Board>

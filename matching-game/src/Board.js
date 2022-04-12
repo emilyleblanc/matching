@@ -5,7 +5,8 @@ const Board = ({children}) => {
    const styles = {
       display: 'flex',
       flexWrap: 'wrap',
-      border: "2px solid black",
+      width: '80%',
+      justifyContent: 'space-between',
    }
    return(
       <div className="board-wrapper" style={styles}>
