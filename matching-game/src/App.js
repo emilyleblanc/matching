@@ -11,8 +11,7 @@ function App() {
 
   const [ films, setFilms ] = useState([]);
   const [ count, setCount ] = useState(0);
-  const [ isMatch, setIsMatch] = useState(false);
-  
+
   //get api data
   useEffect(() => {
     axios({
@@ -33,37 +32,43 @@ function App() {
     ).catch(error => console.log(error))
   },[])
 
-  //logic to get selected cards and find matches
-  let arrOfSelectedCards = []
-
+  
+  //logic to get selected cards
+  let arrOfSelectedCards = [];
+  
   const handleIsSelected = (card) => {
-
-    arrOfSelectedCards.push(card)
     
-    //if 2 cards are selected compare ids to find a match
-    if(arrOfSelectedCards.length === 2 && arrOfSelectedCards[0] === `${arrOfSelectedCards[1]}-copy`){
-      //if a match increase count (score)
-      setCount(count + 1)
-      //set match to true
-      setIsMatch(true)
-      //reset arr to zero
-      arrOfSelectedCards = []
+   const selectedFlims =  _cards.filter((film) => card === film.key);
+    
+    arrOfSelectedCards.push(selectedFlims[0])
+    
+    return arrOfSelectedCards
+    
+  };
+  
 
-    }else if(arrOfSelectedCards.length === 2 && `${arrOfSelectedCards[0]}-copy` === arrOfSelectedCards[1] ){
-      //if a match increase count (score)
-      setCount(count + 1)
-      //set match to true
-      setIsMatch(true)
-      //reset arr to zero
-      arrOfSelectedCards = []
-
-    }else if(arrOfSelectedCards.length === 2){
-
-      arrOfSelectedCards = []
+  //find matches and increase score
+    const handleIsMatch = (cardsArr) => {
+      // if the selected card is the same do nothing
+      if(cardsArr[0] === cardsArr[1]){
+        return 
+      }
+  
+      //if 2 cards are selected compare ids to find a match
+      if(cardsArr[0].key === cardsArr[1].key){
+        //if a match increase count (score)
+        setCount(count + 1)
+  
+        //reset arr to zero
+        cardsArr = []
+  
+      }else{
+        //reset arr to zero
+        cardsArr= []
+      }
 
     }
-    console.log(arrOfSelectedCards)
-  }
+
 
 
   //create card components
@@ -77,8 +82,6 @@ function App() {
           movieBanner={films[0].movie_banner}
           title={film.title}
           handleIsSelected={handleIsSelected}
-          isMatch={isMatch}
-          selectedCardsArrLength={arrOfSelectedCards.length}
           />
       )
     }else{
@@ -90,8 +93,6 @@ function App() {
           movieBanner={films[0].movie_banner}
           title={film.title}
           handleIsSelected={handleIsSelected}
-          isMatch={isMatch}
-          selectedCardsArrLength={arrOfSelectedCards.length}
           />
       )
     }
@@ -101,7 +102,6 @@ function App() {
   return (
     <div className="App" style={{display:"flex", alignItems:"center", flexDirection:'column', boxSizing:'border-box'}}>
       <h1>Matching Game</h1>
-
       <Score
         count={count}/>
       <Board>

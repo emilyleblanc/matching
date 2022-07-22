@@ -1,13 +1,12 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-const Card = ({ id, moviePoster, movieBanner, title, handleIsSelected, selectedCardsArrLength }) => {
+const Card = ({ id, moviePoster, movieBanner, title, handleIsSelected }) => {
 
    const [ isSelected, setIsSelected ] = useState(false);
-   
+
    const handleCardSelected = (id) => {
-      setIsSelected(true);
+      setIsSelected(!isSelected);
       handleIsSelected(id)
-      console.log("arr length",selectedCardsArrLength)
    }
 
    const styles = {
