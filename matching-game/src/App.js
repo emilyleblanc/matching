@@ -1,5 +1,5 @@
 //dependencies
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext, createContext } from 'react';
 import axios from 'axios';
 
 //components
@@ -7,10 +7,16 @@ import Board from './Board';
 import Card from './Card';
 import Score from './Score';
 
+
+export const GameContext = createContext()
+
 function App() {
 
   const [ films, setFilms ] = useState([]);
   const [ count, setCount ] = useState(0);
+  const [ isSelected, setIsSelected ] = useState(false);
+
+  const context = useContext(Context)
 
   //get api data
   useEffect(() => {
@@ -32,7 +38,6 @@ function App() {
     ).catch(error => console.log(error))
   },[])
 
-  
   //logic to get selected cards
   let arrOfSelectedCards = [];
   
@@ -42,31 +47,40 @@ function App() {
     
     arrOfSelectedCards.push(selectedFlims[0])
     
+    if(arrOfSelectedCards.length === 2){
+      handleIsMatch()
+    }
     return arrOfSelectedCards
-    
   };
   
 
   //find matches and increase score
-    const handleIsMatch = (cardsArr) => {
-      // if the selected card is the same do nothing
-      if(cardsArr[0] === cardsArr[1]){
-        return 
-      }
-  
+    const handleIsMatch = () => {
+      console.log(`cardsArr`, arrOfSelectedCards);
+
       //if 2 cards are selected compare ids to find a match
-      if(cardsArr[0].key === cardsArr[1].key){
+      if(arrOfSelectedCards[0].key === arrOfSelectedCards[1].key){
         //if a match increase count (score)
         setCount(count + 1)
-  
+        console.log(`match`);
         //reset arr to zero
-        cardsArr = []
+        arrOfSelectedCards = []
   
       }else{
-        //reset arr to zero
-        cardsArr= []
+
+        //reset arr to zero after 5 seconds
+        setTimeout(() => {
+          console.log("Delayed for 1 second.");
+          reSetCards()
+        }, "3000")
+        
+        arrOfSelectedCards= []
       }
 
+    }
+
+    const reSetCards = () => {
+      console.log('resert cards to not selected')
     }
 
 
@@ -87,7 +101,7 @@ function App() {
     }else{
       return(
         <Card
-          key={`${film.id}-copy`}
+          key={film.id}
           id={`${film.id}-copy`}
           moviePoster={film.image}
           movieBanner={films[0].movie_banner}
@@ -100,14 +114,21 @@ function App() {
   )
 
   return (
-    <div className="App" style={{display:"flex", alignItems:"center", flexDirection:'column', boxSizing:'border-box'}}>
-      <h1>Matching Game</h1>
-      <Score
-        count={count}/>
-      <Board>
-        {_cards}
-      </Board>
-    </div>
+    <GameContext.Provider value={{isSelected}}>
+      <div
+        className="App"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+          boxSizing: "border-box",
+        }}
+      >
+        <h1>Matching Game</h1>
+        <Score count={count} />
+        <Board>{_cards}</Board>
+      </div>
+    </GameContext.Provider>
   );
 }
 

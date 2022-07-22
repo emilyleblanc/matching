@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
+import { Context } from './index';
 
 const Card = ({ id, moviePoster, movieBanner, title, handleIsSelected }) => {
 
-   const [ isSelected, setIsSelected ] = useState(false);
-
    const handleCardSelected = (id) => {
-      setIsSelected(!isSelected);
       handleIsSelected(id)
    }
+
+   const context = useContext(Context)
 
    const styles = {
       button:{
@@ -26,7 +26,7 @@ const Card = ({ id, moviePoster, movieBanner, title, handleIsSelected }) => {
    return(
       <button key={id} style={styles.button} onClick={() => handleCardSelected(id)}>
          {
-            isSelected ? 
+            flipCard ? 
             <img style={styles.img} src={moviePoster} alt={title}/>
             : <img style={styles.img} src={movieBanner} alt={title}/>
          }
